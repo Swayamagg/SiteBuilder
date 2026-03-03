@@ -29,5 +29,8 @@ if(!res.ok){
      throw new Error("open router err"+err)
     }
     const data=await res.json()
-    return data;
+    return data.choices[0].message.content;
 }
+
+
+export default genResponse;
