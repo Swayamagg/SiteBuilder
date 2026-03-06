@@ -1,8 +1,7 @@
-import genResponse from "../config/openRouter";
-import User from "../model/user";
-import Website from "../model/website";
-import extractJson from "../utils/extractJSON.JS";
-
+import User from "../model/user.js";
+import Website from "../model/website.js";
+import genResponse from "../config/openRouter.js"
+import extractJson from "../utils/extract.js";
 const masterPrompt = `
 YOU ARE A PRINCIPAL FRONTEND ARCHITECT
 AND A SENIOR UI/UX ENGINEER
@@ -172,7 +171,7 @@ export const genrateWebsite=async(req,res)=>{
         parsed=await extractJson(raw)
         if(!parsed){
             raw=await genResponse(finalPrompt+"\n\nRETURN ONLY RAW JSON.")
-            parsed=await extractJson(raw)
+            parsed=await extractJson(raw);
         }
         
     }
@@ -205,4 +204,81 @@ export const genrateWebsite=async(req,res)=>{
   } catch (error) {
     return res.status(500).json({message:`generate website error ${error}`})
   }
+}
+export const getWebsiteById=async(req,res)=>{
+  try {
+    const website=await Website.findById({
+      _id:req.params.id,
+      user:req.user._id
+    })
+    if(!website){
+      return res.status(400).json({message:"website not found"})
+    }
+    return res.status(200).json(website);
+  } catch (error) {
+    return res.status(500).json({message:`get website by id error ${error}`})
+  }
+}
+
+export const changes=async(req,res)=>{
+     try {
+      const {prompt}=req.body;
+    if(!prompt){
+        return res.status(400).json({message:"prompt not found"});
+    }
+    const website=await Website.findOne({
+      _id:req.params.id,
+      user:req.user._id
+    })
+    if(!website){
+      return res.status(400).json({message:"website not found"});
+    }
+    const user=await User.findById(req.user._id);
+    if(!user){
+        return res.status(400).json({message:"usernot found"});
+    }
+    if(user.credits<25){
+        return res.status(400).json({message:"you have not enough credits to generate a website"});
+    }
+    const updatePrompt=`
+    UPDATE THIS HTML WEBSITE.
+
+    CURRENT CODE:${website.latestCode}
+    USER REQUEST:${prompt}
+    RETURN RAW JSON ONLY:
+    {
+    "message":"Short Confirmation",
+    "code":"<UPDATED FULL HTML>"
+    }`
+    let raw=""
+    let parsed=null
+    for (let i = 0; i < 2 && !parsed; i++) {
+        raw=await genResponse(updatePrompt)
+        parsed=await extractJson(raw)
+        if(!parsed){
+            raw=await genResponse(updatePrompt+"\n\nRETURN ONLY RAW JSON.")
+            parsed=await extractJson(raw);
+        }
+        
+    }
+    if(!parsed.code){
+        console.log("ai return invalid response",raw)
+        return res.status(400).json({message:"ai return invalid response"});
+    }
+    website.conversation.push(
+      {role:"ai",content:parsed.message},
+      {role:"ai",content:prompt}
+    )
+    website.latestCode=parsed.code
+    await website.save();
+    user.credits=user.credits-25;
+    await user.save();
+    return res.status(200).json({
+      message:parsed.message,
+      code:parsed.code,
+      remainCredits:user.credits
+    })
+     } catch (error) {
+      return res.status(500).json({message:`update website error ${error} `})
+     }
 }
