@@ -26,9 +26,7 @@ const websiteSchema=new mongoose.Schema({
        type:String,
        required:true,
     },
-    conversation:{
-        msgSchema
-    },
+    conversation:[msgSchema],
     deployed:{
         type:Boolean,
         default:false
@@ -39,6 +37,7 @@ const websiteSchema=new mongoose.Schema({
     slug:{
         type:String,
         unique:true,
+        required: true
     }
 },{timestamps:true})
 

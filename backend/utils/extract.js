@@ -1,10 +1,14 @@
 const extractJson=async(text)=>{
-      if(!text) return
+      if(!text) return;
       const cleaned=text.replace(/```json/gi,"").replace(/```/g,"").trim();
       const firstBrace=cleaned.indexOf("{");
       const closeBrace=cleaned.lastIndexOf("}");
-      if(firstBrace==-1 || closeBrace==-1) return null;
+      if(firstBrace===-1 || closeBrace==-1) return null;
       const jsonStr=cleaned.slice(firstBrace,closeBrace+1);
-      return JSON.parse(jsonStr)
+      try {
+        return JSON.parse(jsonStr)
+      } catch (error) {
+        return null;
+      }
 }
 export default extractJson;

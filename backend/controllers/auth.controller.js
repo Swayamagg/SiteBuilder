@@ -1,6 +1,6 @@
 export const getCurrentUser=async (req,res) => {
     try {
-        if(!user){
+        if(!req.user){
             return res.json({user:null});
         }
         return res.json(req.user);

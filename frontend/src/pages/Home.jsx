@@ -68,7 +68,7 @@ const Home = () => {
                       userData.avatar ||
                       `https://ui-avatars.com/api/?name=${userData.name}`
                     }
-                    className="w-9 h-9 rounded-full  border border-white/20 object-cover"
+                    className="w-9 h-9 rounded-full  border border-white/20 object-cover" referrerPolicy="no-referrer"
                   ></img>
                 </button>
                 <AnimatePresence>

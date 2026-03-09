@@ -1,4 +1,3 @@
-import React from 'react'
 import { ArrowLeft } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import {motion} from 'motion/react'
@@ -13,7 +12,9 @@ const Generate = () => {
 
   const handleGenerate=async()=>{
        try {
-        const result=axios.post(`${serverUrl}/api/website/generate`,{prompt},{withCredentials:true});
+        const result=await axios.post(`${serverUrl}/api/website/generate`,{prompt},{withCredentials:true});
+        console.log(result.data);
+        // perhaps navigate to editor or something
        } catch (error) {
         console.log(error);
        }

@@ -2,7 +2,7 @@ const openServerUrl="https://openrouter.ai/api/v1/chat/completions"
 const model="deepseek/deepseek-chat"
 
 const genResponse=async(prompt)=>{
-    await fetch(openServerUrl, {
+    const res = await fetch(openServerUrl, {
   method: 'POST',
   headers: {
     Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,

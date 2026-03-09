@@ -158,7 +158,7 @@ export const genrateWebsite=async(req,res)=>{
     }
     const user=await User.findById(req.user._id);
     if(!user){
-        return res.status(400).json({message:"usernot found"});
+        return res.status(400).json({message:"user not found"});
     }
     if(user.credits<50){
         return res.status(400).json({message:"you have not enough credits to generate a website"});
@@ -180,7 +180,7 @@ export const genrateWebsite=async(req,res)=>{
         return res.status(400).json({message:"ai return invalid response"});
     }
     const website=await Website.create({
-        user:user_id,
+        user:user._id,
         title:prompt.slice(0,60),
         latestCode:parsed.code,
         conversation:[
@@ -266,8 +266,8 @@ export const changes=async(req,res)=>{
         return res.status(400).json({message:"ai return invalid response"});
     }
     website.conversation.push(
+      {role:"user",content:prompt},
       {role:"ai",content:parsed.message},
-      {role:"ai",content:prompt}
     )
     website.latestCode=parsed.code
     await website.save();
@@ -281,4 +281,12 @@ export const changes=async(req,res)=>{
      } catch (error) {
       return res.status(500).json({message:`update website error ${error} `})
      }
+}
+export const getAll=async(req,res)=>{
+      try {
+        const websites=await Website.find({user:req.user._id});
+        return res.status(200).json(websites);
+      } catch (error) {
+         return res.status(500).json({message:`update website error ${error} `})
+      }
 }
