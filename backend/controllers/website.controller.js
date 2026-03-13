@@ -2,6 +2,7 @@ import User from "../model/user.js";
 import Website from "../model/website.js";
 import genResponse from "../config/openRouter.js"
 import extractJson from "../utils/extract.js";
+import slugify from 'slugify';
 const masterPrompt = `
 YOU ARE A PRINCIPAL FRONTEND ARCHITECT
 AND A SENIOR UI/UX ENGINEER
@@ -170,7 +171,7 @@ export const genrateWebsite=async(req,res)=>{
         raw=await genResponse(finalPrompt)
         parsed=await extractJson(raw)
         if(!parsed){
-            raw=await genResponse(finalPrompt+"\n\nRETURN ONLY RAW JSON.")
+            raw=await genResponse(finalPrompt + "\n\nRETURN ONLY RAW JSON.")
             parsed=await extractJson(raw);
         }
         
@@ -179,18 +180,20 @@ export const genrateWebsite=async(req,res)=>{
         console.log("ai return invalid response",raw)
         return res.status(400).json({message:"ai return invalid response"});
     }
+    const title = prompt.slice(0, 60);
     const website=await Website.create({
         user:user._id,
-        title:prompt.slice(0,60),
+        title,
+        slug: slugify(title, { lower: true, strict: true }),
         latestCode:parsed.code,
         conversation:[
             {
                 role:"ai",
-                content:parsed.message
+                content:parsed.message,
             },
             {
                 role:"user",
-                content:prompt
+                content:prompt,
             }
         ]
     })
