@@ -76,7 +76,7 @@ const WebsiteEditor = () => {
     const url = URL.createObjectURL(blob);
     iframeRef.current.src = url;
     return () => URL.revokeObjectURL(url);
-  }, [code]);
+  }, [code])
   if (error) {
     return (
       <div className="h-screen flex items-center justify-center bg-black text-red-400">
@@ -151,7 +151,7 @@ const WebsiteEditor = () => {
         </div>
           <iframe
             ref={iframeRef}
-            className="flex-1 w-full bg-white"
+            className="flex-1 w-full bg-white" sandbox='allow-scripts allow-same-origin allow-forms'
           />
       </div>
       <AnimatePresence>
@@ -211,7 +211,7 @@ const WebsiteEditor = () => {
       <AnimatePresence>
         {showPreview && (
           <motion.div className="fixed inset-0  z-[9999] bg-[#1e1e1e]">
-            <iframe srcDoc={code} className="w-full h-full bg-white"></iframe>
+            <iframe srcDoc={code} className="w-full h-full bg-white" sandbox='allow-scripts allow-same-origin allow-forms'></iframe>
             <button className="absolute top-4 right-4 p-2 rounded-lg bg-black/70" onClick={()=>setShowPreview(false)}><X size={18}/></button>
           </motion.div>
       )}

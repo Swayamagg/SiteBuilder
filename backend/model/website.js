@@ -37,7 +37,8 @@ const websiteSchema=new mongoose.Schema({
     slug:{
         type:String,
         unique:true,
-        required: true
+        required: true,
+        sparse:true
     }
 },{timestamps:true})
 

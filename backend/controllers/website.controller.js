@@ -293,3 +293,42 @@ export const getAll=async(req,res)=>{
          return res.status(500).json({message:`update website error ${error} `})
       }
 }
+
+export const deploy=async(req,res)=>{
+  try {
+    const website=await Website.findOne({
+    _id:req.params.id,
+    user:req.user._id
+  })
+  if(!website){
+     return res.status(400).json({message:"website not found"});
+  }
+  if(!website.slug){
+    website.slug=website.title.toLowerCase().replace(/[^a-z0-9]/g,"").slice(0,60)+website._id.toString().slice(-5)
+  }
+    website.deployed=true
+    website.deployUrl=`${process.env.FRONTEND_URL}/site/${website.slug}`
+    await website.save()
+    return res.status(200).json({
+      slug:website.slug,
+      url:website.deployUrl
+    })
+  
+  } catch (error) {
+    return res.status(500).json({message:`deploy website error ${error}`})
+  }
+}
+
+export const getBySlug=async(req,res)=>{
+  try {
+    const website=await Website.findOne({
+      slug:req.params.slug
+    });
+    if(!website){
+      return res.status(400).json({message:"website not found"});
+    }
+    return res.status(200).json(website);
+  } catch (error) {
+    return res.status(500).json({message:`get by slug website error ${error}`});
+  }
+}
