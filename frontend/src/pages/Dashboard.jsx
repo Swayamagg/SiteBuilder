@@ -27,6 +27,9 @@ const Dashboard = () => {
       } else {
         setError("Deployment succeeded but no URL was returned.");
       }
+      setWebsites((prev)=>
+        prev.map((w)=> w._id===id ? {...w,deployed:true,deployUrl:result.data.url}:w)
+      );
     } catch (error) {
       console.log(error)
     }
@@ -108,6 +111,7 @@ const Dashboard = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.05 }}
                   whileHover={{ y: -20 }}
+                  onClick={()=>navigate(`/editor/${w._id}`)}
                   className="rounded-2xl bg-white/5 border border-white/10 overflow-hidden hover:bg-white/10 transition flex flex-col"
                 >
                   <div className="relative h-40 bg-black cursor-pointer">
