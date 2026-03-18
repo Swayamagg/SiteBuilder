@@ -9,7 +9,7 @@ function useGetCurrentUser() {
   useEffect(() => {
     const getCurrentUser = async () => {
       try {
-        const result = await axios.get(`${serverUrl}/api/user/me`, {
+        const result = await axios.get(`https://sitebuilder-1.onrender.com/api/user/me`, {
           withCredentials: true,
         })
         dispatch(setUserData(result.data));
