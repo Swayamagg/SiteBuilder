@@ -290,6 +290,7 @@ export const getAll=async(req,res)=>{
         const websites=await Website.find({user:req.user._id});
         return res.status(200).json(websites);
       } catch (error) {
+        console.log(error);
          return res.status(500).json({message:`update website error ${error} `})
       }
 }
