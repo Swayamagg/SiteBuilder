@@ -8,7 +8,7 @@ import Generate from './pages/Generate.jsx'
 import WebsiteEditor from './pages/Editor.jsx'
 import LiveSite from './pages/LiveSite.jsx'
 import Pricing from './pages/Pricing.jsx'
-export const serverUrl="https://sitebuilder-kq28.onrender.com"
+export const serverUrl="http://localhost:8000"
 
 
 const App = () => {

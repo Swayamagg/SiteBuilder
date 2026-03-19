@@ -38,7 +38,7 @@ const Dashboard = () => {
     const handleGetAllWebsite = async () => {
        setLoading(true);
       try {
-        const result = await axios.get(`https://sitebuilder-kq28.onrender.com/api/website/get-all`, {
+        const result = await axios.get(`${serverUrl}/api/website/get-all`, {
           withCredentials: true,
         });
         setWebsites(result.data || []);
