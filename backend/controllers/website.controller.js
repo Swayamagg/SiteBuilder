@@ -243,16 +243,7 @@ export const changes=async(req,res)=>{
     if(user.credits<25){
         return res.status(400).json({message:"you have not enough credits to generate a website"});
     }
-    const updatePrompt=`
-    UPDATE THIS HTML WEBSITE.
-
-    CURRENT CODE:${website.latestCode}
-    USER REQUEST:${prompt}
-    RETURN RAW JSON ONLY:
-    {
-    "message":"Short Confirmation",
-    "code":"<UPDATED FULL HTML>"
-    }`
+    const updatePrompt="UPDATE THIS HTML WEBSITE.\n\nCURRENT CODE:\n" + website.latestCode + "\n\nUSER REQUEST:\n" + prompt + "\n\nRETURN RAW JSON ONLY:\n{\n\"message\":\"Short Confirmation\",\n\"code\":\"<UPDATED FULL HTML>\"\n}"
     let raw=""
     let parsed=null
     for (let i = 0; i < 2 && !parsed; i++) {
