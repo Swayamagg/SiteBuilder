@@ -20,7 +20,7 @@ const genResponse=async(prompt)=>{
         content: prompt,
       },
     ],
-    max_tokens: 4000,
+    max_tokens: 2300,
     temperature:0.2
   }),
 });
